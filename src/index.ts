@@ -62,14 +62,12 @@ export default {
         } catch (e) {
           return new Response(JSON.stringify({ 
             error: "Invalid URL Encoded JSON", 
-            details: "Body must be a URL-encoded valid JSON string" 
           }), { status: 400, headers });
         }
 
         if (!parsedData || typeof parsedData !== 'object' || !("errors" in parsedData)) {
           return new Response(JSON.stringify({
             error: "Missing Required Field",
-            details: "The JSON object must contain an 'errors' field."
           }), { status: 400, headers });
         }
 
@@ -82,8 +80,7 @@ export default {
         return new Response(
           JSON.stringify({ 
             message: "Created successfully", 
-            key: newKey, 
-            data: parsedData,
+            key: newKey
           }),
           { status: 201, headers }
         );
