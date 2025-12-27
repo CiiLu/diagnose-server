@@ -12,11 +12,10 @@
 	},
 	"kv_namespaces": [
 		{
-		"binding": "diagnose_server",
-		"id": "3dc2faf2616e4e1096584b716fb07fce"
+			"binding": "diagnose_server",
+			"id": "3dc2faf2616e4e1096584b716fb07fce"
 		}
-	]
-
+	],
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
@@ -39,7 +38,9 @@
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/
 	 */
-	// "assets": {  "directory": "./public/",  "binding": "ASSETS" }
+	"assets": {
+		"directory": "./public/"
+	}
 	/**
 	 * Service Bindings (communicate between multiple Workers)
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings

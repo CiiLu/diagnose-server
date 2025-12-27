@@ -20,6 +20,30 @@ function generateCustomKey(): string {
   return `P${group1}V${group2}Z`;
 }
 
+// 这里是你想返回的 PowerShell 脚本内容
+const POWERSHELL_SCRIPT = `
+$tempDir = [System.IO.Path]::GetTempPath()
+$workDir = Join-Path $tempDir "diagnose_temp"
+$zipPath = Join-Path $tempDir "diagnose.zip"
+
+if (Test-Path $workDir) {
+    Remove-Item -Recurse -Force $workDir
+}
+
+New-Item -ItemType Directory -Path $workDir | Out-Null
+
+Invoke-WebRequest -Uri "https://nightly.link/CiiLu/diagnose/workflows/build/main/windows.zip" -OutFile $zipPath
+"
+Expand-Archive -Path $zipPath -DestinationPath $workDir -Force
+
+$exePath = Join-Path $workDir "diagnose.exe"
+
+& $exePath
+
+Remove-Item -Recurse -Force $workDir
+Remove-Item -Force $zipPath
+`;
+
 export default {
   async fetch(
     request: Request,
@@ -29,6 +53,7 @@ export default {
     const url = new URL(request.url);
     const key = url.pathname.slice(1);
     const method = request.method;
+    const userAgent = request.headers.get("User-Agent") || "";
 
     const headers = {
       "Content-Type": "application/json",
@@ -39,6 +64,13 @@ export default {
     try {
       if (method === "OPTIONS") {
         return new Response(null, { headers });
+      }
+
+      // 新增：如果 GET / 且 User-Agent 包含 PowerShell，返回脚本
+      if (method === "GET" && !key && userAgent.toLowerCase().includes("powershell")) {
+        return new Response(POWERSHELL_SCRIPT.trim(), {
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
       }
 
       if (method === "POST" && !key) {
