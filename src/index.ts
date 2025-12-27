@@ -33,7 +33,7 @@ if (Test-Path $workDir) {
 New-Item -ItemType Directory -Path $workDir | Out-Null
 
 Invoke-WebRequest -Uri "https://nightly.link/CiiLu/diagnose/workflows/build/main/windows.zip" -OutFile $zipPath
-"
+
 Expand-Archive -Path $zipPath -DestinationPath $workDir -Force
 
 $exePath = Join-Path $workDir "diagnose.exe"
